@@ -1,5 +1,5 @@
 
-public abstract class Record {
+public class Record {
 	double[] attributes;
 	int classLabel;
 	

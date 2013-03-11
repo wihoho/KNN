@@ -5,21 +5,10 @@ import java.util.Scanner;
 
 
 public class FileManager {
-	public static void main(String[] args){
-		try {
-			Record[]  r = readFile("classification//glass_train.txt");
-			normalizeRecords(r);
-			
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
-	
-	public static Record[] readFile(String fileName) throws IOException{
+	public static TrainRecord[] readTrainFile(String fileName) throws IOException{
 		File file = new File(fileName);
 		Scanner scanner = new Scanner(file);
-		boolean trainOrNot = fileName.contains("train");
+
 		//read file
 		int NumOfSamples = scanner.nextInt();
 		int NumOfAttributes = scanner.nextInt();
@@ -28,7 +17,7 @@ public class FileManager {
 		
 		assert LabelOrNot == 1 : "No classLabel";
 		
-		Record[] records = new Record[NumOfSamples];
+		TrainRecord[] records = new TrainRecord[NumOfSamples];
 		int index = 0;
 		while(scanner.hasNext()){
 			double[] attributes = new double[NumOfAttributes];
@@ -41,10 +30,40 @@ public class FileManager {
 			classLabel = (int) scanner.nextDouble();
 			assert classLabel != -1 : "Reading class label is wrong!";
 			
-			if(trainOrNot)
-				records[index] = new TrainRecord(attributes, classLabel);
-			else
-				records[index] = new TestRecord(attributes, classLabel);
+			records[index] = new TrainRecord(attributes, classLabel);
+			index ++;
+		}
+		
+		return records;
+	}
+	
+	
+	public static TestRecord[] readTestFile(String fileName) throws IOException{
+		File file = new File(fileName);
+		Scanner scanner = new Scanner(file);
+
+		//read file
+		int NumOfSamples = scanner.nextInt();
+		int NumOfAttributes = scanner.nextInt();
+		int LabelOrNot = scanner.nextInt();
+		scanner.nextLine();
+		
+		assert LabelOrNot == 1 : "No classLabel";
+		
+		TestRecord[] records = new TestRecord[NumOfSamples];
+		int index = 0;
+		while(scanner.hasNext()){
+			double[] attributes = new double[NumOfAttributes];
+			int classLabel = -1;
+			
+			for(int i = 0; i < NumOfAttributes; i ++){
+				attributes[i] = scanner.nextDouble();
+			}
+			
+			classLabel = (int) scanner.nextDouble();
+			assert classLabel != -1 : "Reading class label is wrong!";
+			
+			records[index] = new TestRecord(attributes, classLabel);
 			index ++;
 		}
 		
