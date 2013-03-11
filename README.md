@@ -25,7 +25,8 @@ the main class implementing the KNN algorithm
 Questions:
 
 1. When normalizing data, do we need to consider TrainingData and TestData together or seperately?   
-For different datasets, the max and min values might be different. As a result, the normalization results for TrainData and TestData are not unified.
-
+	For different datasets, the max and min values might be different. As a result, the normalization results for TrainData and TestData are not unified.  
+	The Prof. said that the test data set is normalized according to the scheme deduced by training set.  
+	
 2. During KNN, is there a need to set a threshold to test outliers?  
 	Should be No since there are so many different datasets. We may nesure that all test cases have valid class labels.                      
