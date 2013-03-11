@@ -108,6 +108,24 @@ public class FileManager {
 		return scheme;
 	}
 	
+	//Training data is normalized according to the scheme worked out by the training data
+	public static void normalize(Record[] records, double[][] scheme){
+		assert records[0].attributes.length == scheme[0].length;
+		
+		int numOfRecords = records.length;
+		int numOfAttributes = records[0].attributes.length;
+		
+		for(int m = 0 ; m < numOfAttributes; m ++){
+			double max = scheme[0][m];
+			double min = scheme[1][m];
+			
+			for(int n = 0; n < numOfRecords; n ++){
+				double temp = records[n].attributes[m];
+				records[n].attributes[m] = (temp - min) / (max - min);
+			}
+		}
+	}
+	
 	//Write File
 	
 }

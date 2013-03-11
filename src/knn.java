@@ -34,8 +34,8 @@ public class knn {
 			
 			//normalize the data
 			if(normalization){
-				FileManager.normalizeRecords(trainingSet);
-				FileManager.normalizeRecords(testingSet);
+				double[][] scheme = FileManager.normalizeRecords(trainingSet);
+				FileManager.normalize(testingSet,scheme);
 			}
 			Metric metric;
 			if(metricType == 0)
