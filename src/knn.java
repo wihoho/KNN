@@ -7,12 +7,12 @@ import java.util.Set;
 
 public class knn {
 	public static void main(String[] args){
-//		knn("classification\\glass_train.txt","classification\\glass_test.txt", 1, 0);
-//		knn("classification\\glass_train.txt","classification\\glass_test.txt", 6, 1);
-//		knn("classification\\glass_train.txt","classification\\glass_test.txt", 10, 2);
-//		knn("classification\\glass_train.txt","classification\\glass_test.txt", 20, 2);
+//		knn("classification\\glass_train.txt","classification\\glass_test.txt", 2, 0);
+//		knn("classification\\glass_train.txt","classification\\glass_test.txt", 2, 1);
+//		knn("classification\\glass_train.txt","classification\\glass_test.txt", 2, 2);
+//		knn("classification\\glass_train.txt","classification\\glass_test.txt", 2, 2);
 //		System.out.println();
-//		knn("classification\\glass_train.txt","classification\\glass_test.txt", 1, 0, true);
+//		knn("classification\\glass_train.txt","classification\\glass_test.txt", 1, 0);
 //		knn("classification\\glass_train.txt","classification\\glass_test.txt", 6, 1,true);
 //		knn("classification\\glass_train.txt","classification\\glass_test.txt", 10, 2,true);
 //		knn("classification\\glass_train.txt","classification\\glass_test.txt", 20, 2,true);
@@ -22,10 +22,12 @@ public class knn {
 //		knn("classification\\dna_train.txt","classification\\dna_test.txt", 4, 2,false);
 //		knn("classification\\dna_train.txt","classification\\dna_test.txt", 15, 2,false);
 //		System.out.println();
-//		knn("classification\\dna_train.txt","classification\\dna_test.txt", 4, 0);
+//		knn("classification\\vowel_train.txt","classification\\vowel_test.txt", 4, 0);
 //		knn("classification\\dna_train.txt","classification\\dna_test.txt", 4, 1);
 //		knn("classification\\dna_train.txt","classification\\dna_test.txt", 4, 2);
 		knn("classification\\dna_train.txt","classification\\dna_test.txt", 15, 2);
+		knn("classification\\dna_train.txt","classification\\dna_test.txt", 15, 1);
+		knn("classification\\dna_train.txt","classification\\dna_test.txt", 15, 0);
 	}
 	
 	public static void knn(String traningFile, String testFile, int K, int metricType){
@@ -91,16 +93,25 @@ public class knn {
 		ArrayList<TrainRecord> neighbors = new ArrayList<TrainRecord>();
 		
 		//initialization, put the first K trainRecords into the above arrayList
+		Metric EuclideanDis = new EuclideanDistance();
+		
 		int index;
 		for(index = 0; index < K; index++){
 			trainingSet[index].distance = metric.getDistance(trainingSet[index], testRecord);
+			if(metric instanceof EuclideanDistance)
+				trainingSet[index].EuclideanDistance = trainingSet[index].distance;
+			else 
+				trainingSet[index].EuclideanDistance = EuclideanDis.getDistance(trainingSet[index], testRecord);
 			neighbors.add(trainingSet[index]);
 		}
 		
 		//go through the remaining records in the trainingSet to find K nearest neighbors
 		for(index = K; index < NumOfTrainingSet; index ++){
 			trainingSet[index].distance = metric.getDistance(trainingSet[index], testRecord);
-			
+			if(metric instanceof EuclideanDistance)
+				trainingSet[index].EuclideanDistance = trainingSet[index].distance;
+			else 
+				trainingSet[index].EuclideanDistance = EuclideanDis.getDistance(trainingSet[index], testRecord);
 			//get the index of the neighbor with the largest distance to testRecord
 			int maxIndex = 0;
 			for(int i = 1; i < neighbors.size(); i ++){
@@ -131,10 +142,10 @@ public class knn {
 			
 			//if this classLabel does not exist in the HashMap, put 
 			if(!map.containsKey(key))
-				map.put(key, 1 / temp.distance);
+				map.put(key, 1 / (temp.EuclideanDistance * temp.EuclideanDistance));
 			else{
 				double value = map.get(key);
-				value += 1 / temp.distance;
+				value += 1 / (temp.EuclideanDistance*temp.EuclideanDistance);
 				map.put(key, value);
 			}
 		}	

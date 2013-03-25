@@ -3,6 +3,7 @@
 
 public class TrainRecord extends Record {
 	double distance;
+	double EuclideanDistance; // used for voting
 	
 	TrainRecord(double[] attributes, int classLabel) {
 		super(attributes, classLabel);

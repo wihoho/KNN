@@ -30,7 +30,15 @@ public class CosineSimilarity implements Metric {
 		eNorm = Math.sqrt(eNorm);
 		
 		// get cosine similarity
+		if(se < 0)
+			se = 0 -se;
+		
 		cosine = se / (sNorm * eNorm);
+		
+		
+		//System.out.println("This cosine similarity is :"+cosine);
+		
+		
 		
 		// transform cosine similarity into dissimilarity such that this is unified with EuclideanDistance and L1Distance
 		if(cosine == 0.0)
