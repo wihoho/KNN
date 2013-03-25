@@ -7,7 +7,7 @@ import java.util.Set;
 
 public class knn {
 	public static void main(String[] args){
-//		knn("classification\\glass_train.txt","classification\\glass_test.txt", 1, 0);
+		knn("classification\\glass_train.txt","classification\\glass_test.txt", 1, 0);
 //		knn("classification\\glass_train.txt","classification\\glass_test.txt", 6, 1);
 //		knn("classification\\glass_train.txt","classification\\glass_test.txt", 10, 2);
 //		knn("classification\\glass_train.txt","classification\\glass_test.txt", 20, 2);
@@ -25,10 +25,12 @@ public class knn {
 //		knn("classification\\dna_train.txt","classification\\dna_test.txt", 4, 0);
 //		knn("classification\\dna_train.txt","classification\\dna_test.txt", 4, 1);
 //		knn("classification\\dna_train.txt","classification\\dna_test.txt", 4, 2);
-		knn("classification\\dna_train.txt","classification\\dna_test.txt", 15, 2);
+//		knn("classification\\dna_train.txt","classification\\dna_test.txt", 15, 2);
 	}
 	
 	public static void knn(String traningFile, String testFile, int K, int metricType){
+		final long startTime = System.currentTimeMillis();
+		
 		try {
 			TrainRecord[] trainingSet =  FileManager.readTrainFile(traningFile);
 			TestRecord[] testingSet =  FileManager.readTestFile(testFile);
@@ -57,7 +59,14 @@ public class knn {
 					correctPrediction ++;
 			}
 			
+			String predictPath = FileManager.outputFile(testingSet, traningFile);
+			System.out.println("The prediction file is stored in "+predictPath);
 			System.out.println("The accuracy is "+(double)correctPrediction / numOfTestingRecord);
+			
+			final long endTime = System.currentTimeMillis();
+			System.out.println("Total excution time: "+(endTime - startTime) / (double)1000 +" seconds.");
+		
+		
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

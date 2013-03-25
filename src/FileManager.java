@@ -1,5 +1,6 @@
+import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileNotFoundException;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Scanner;
 
@@ -68,5 +69,36 @@ public class FileManager {
 		}
 		
 		return records;
+	}
+	
+	public static String outputFile(TestRecord[] testRecords, String trainFilePath) throws IOException{
+		//construct the predication file name
+		StringBuilder predictName = new StringBuilder();
+		for(int i = 15; i < trainFilePath.length(); i ++){
+			if(trainFilePath.charAt(i) != '_')
+				predictName.append(trainFilePath.charAt(i));
+			else
+				break;
+		}
+		String predictPath = "classification\\"+predictName.toString()+"_prediction.txt";
+		
+		//ouput the prediction labels
+		File file = new File(predictPath);
+		if(!file.exists())
+			file.createNewFile();
+		
+		FileWriter fw = new FileWriter(file);
+		BufferedWriter bw = new BufferedWriter(fw);
+		
+		for(int i =0; i < testRecords.length; i ++){
+			TestRecord tr = testRecords[i];
+			bw.write(Integer.toString(tr.predictedLabel));
+			bw.newLine();
+		}
+		
+		bw.close();
+		fw.close();
+		
+		return predictPath;
 	}
 }
