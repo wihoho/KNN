@@ -7,25 +7,29 @@ import java.util.Set;
 
 public class knn {
 	public static void main(String[] args){
-//		knn("classification\\glass_train.txt","classification\\glass_test.txt", 1, 0);
-//		knn("classification\\glass_train.txt","classification\\glass_test.txt", 6, 1);
-//		knn("classification\\glass_train.txt","classification\\glass_test.txt", 10, 2);
-//		knn("classification\\glass_train.txt","classification\\glass_test.txt", 20, 2);
-//		System.out.println();
-//		knn("classification\\glass_train.txt","classification\\glass_test.txt", 1, 0, true);
-//		knn("classification\\glass_train.txt","classification\\glass_test.txt", 6, 1,true);
-//		knn("classification\\glass_train.txt","classification\\glass_test.txt", 10, 2,true);
-//		knn("classification\\glass_train.txt","classification\\glass_test.txt", 20, 2,true);
-//		System.out.println();
-//		knn("classification\\dna_train.txt","classification\\dna_test.txt", 4, 0,false);
-//		knn("classification\\dna_train.txt","classification\\dna_test.txt", 4, 1,false);
-//		knn("classification\\dna_train.txt","classification\\dna_test.txt", 4, 2,false);
-//		knn("classification\\dna_train.txt","classification\\dna_test.txt", 15, 2,false);
-//		System.out.println();
-//		knn("classification\\dna_train.txt","classification\\dna_test.txt", 4, 0);
-//		knn("classification\\dna_train.txt","classification\\dna_test.txt", 4, 1);
-//		knn("classification\\dna_train.txt","classification\\dna_test.txt", 4, 2);
-		knn("classification\\dna_train.txt","classification\\dna_test.txt", 15, 2);
+		System.out.println("iris");
+		knn("classification\\iris_train.txt","classification\\iris_test.txt",1,1);
+		System.out.println();
+		
+		System.out.println("glass");
+		knn("classification\\glass_train.txt","classification\\glass_test.txt",1,0);
+		System.out.println();
+		
+		System.out.println("vowel");
+		knn("classification\\vowel_train.txt","classification\\vowel_test.txt",3,2);
+		System.out.println();
+		
+		System.out.println("vehicle");
+		knn("classification\\vehicle_train.txt","classification\\vehicle_test.txt",3,1);
+		System.out.println();
+		
+		System.out.println("letter");
+		knn("classification\\letter_train.txt","classification\\letter_test.txt",3,0);
+		System.out.println();
+		
+		System.out.println("DNA");
+		knn("classification\\dna_train.txt","classification\\dna_test.txt",5,2);
+		System.out.println();
 	}
 	
 	public static void knn(String traningFile, String testFile, int K, int metricType){
@@ -68,7 +72,7 @@ public class knn {
 			//Output a file containing predicted labels for TestRecords
 			String predictPath = FileManager.outputFile(testingSet, traningFile);
 			System.out.println("The prediction file is stored in "+predictPath);
-			System.out.println("The accuracy is "+(double)correctPrediction / numOfTestingRecord);
+			System.out.println("The accuracy is "+((double)correctPrediction / numOfTestingRecord)*100+"%");
 			
 			//print the total execution time
 			final long endTime = System.currentTimeMillis();

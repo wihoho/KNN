@@ -30,6 +30,9 @@ public class CosineSimilarity implements Metric {
 		eNorm = Math.sqrt(eNorm);
 		
 		// get cosine similarity
+		if(se < 0)
+			se = 0 - se; // Since KNN finds K nearest neighbors with certain range, the sign of se will not affect the result
+		
 		cosine = se / (sNorm * eNorm);
 		
 		// transform cosine similarity into dissimilarity such that this is unified with EuclideanDistance and L1Distance
