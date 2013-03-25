@@ -1,11 +1,16 @@
+//FileManager
+// * ReadFile: read training files and test files
+// * OutputFile: output predicted labels into a file
+
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Scanner;
 
-
 public class FileManager {
+	
+	//read training files
 	public static TrainRecord[] readTrainFile(String fileName) throws IOException{
 		File file = new File(fileName);
 		Scanner scanner = new Scanner(file);
@@ -16,18 +21,22 @@ public class FileManager {
 		int LabelOrNot = scanner.nextInt();
 		scanner.nextLine();
 		
-		assert LabelOrNot == 1 : "No classLabel";
+		assert LabelOrNot == 1 : "No classLabel";// ensure that C is present in this file
 		
+		
+		//transform data from file into TrainRecord objects
 		TrainRecord[] records = new TrainRecord[NumOfSamples];
 		int index = 0;
 		while(scanner.hasNext()){
 			double[] attributes = new double[NumOfAttributes];
 			int classLabel = -1;
 			
+			//Read a whole line for a TrainRecord
 			for(int i = 0; i < NumOfAttributes; i ++){
 				attributes[i] = scanner.nextDouble();
 			}
 			
+			//Read classLabel
 			classLabel = (int) scanner.nextDouble();
 			assert classLabel != -1 : "Reading class label is wrong!";
 			
@@ -57,10 +66,12 @@ public class FileManager {
 			double[] attributes = new double[NumOfAttributes];
 			int classLabel = -1;
 			
+			//read a whole line for a TestRecord
 			for(int i = 0; i < NumOfAttributes; i ++){
 				attributes[i] = scanner.nextDouble();
 			}
 			
+			//read the true lable of a TestRecord which is later used for validation
 			classLabel = (int) scanner.nextDouble();
 			assert classLabel != -1 : "Reading class label is wrong!";
 			

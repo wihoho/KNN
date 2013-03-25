@@ -21,6 +21,7 @@ the main class implementing the KNN algorithm
 	- For each TestRecord, use a *k-size* container (like a heap) to maintain k TrainRecords which are the nearest to that Testrecord while going through all TrainRecords. (No need to store all the distances which is a kind of wasting memory)
 	- During the classification phase, weigh the vote according to distance and assign the class lable with the largest weight.
 	- Whether there is need to think about outlier???
+	- If there are similar labels, enlarge the container's size dynamically
 
 Questions:
 
@@ -29,4 +30,10 @@ Questions:
 	The Prof. said that the test data set is normalized according to the scheme deduced by training set.  
 	
 2. During KNN, is there a need to set a threshold to test outliers?  
-	Should be No since there are so many different datasets. We may nesure that all test cases have valid class labels.                      
+	Should be No since there are so many different datasets. We may nesure that all test cases have valid class labels.         
+
+Problems:  
+    	
+- Cosine Similarity may be negative  ?
+- weighs should use Euclidean distance?  
+          

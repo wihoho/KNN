@@ -1,4 +1,4 @@
-
+//This class implements Metric interface and is used to calculate EuclideanDistance
 public class EuclideanDistance implements Metric {
 
 	@Override

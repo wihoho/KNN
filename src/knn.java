@@ -7,7 +7,7 @@ import java.util.Set;
 
 public class knn {
 	public static void main(String[] args){
-		knn("classification\\glass_train.txt","classification\\glass_test.txt", 1, 0);
+//		knn("classification\\glass_train.txt","classification\\glass_test.txt", 1, 0);
 //		knn("classification\\glass_train.txt","classification\\glass_test.txt", 6, 1);
 //		knn("classification\\glass_train.txt","classification\\glass_test.txt", 10, 2);
 //		knn("classification\\glass_train.txt","classification\\glass_test.txt", 20, 2);
@@ -25,16 +25,19 @@ public class knn {
 //		knn("classification\\dna_train.txt","classification\\dna_test.txt", 4, 0);
 //		knn("classification\\dna_train.txt","classification\\dna_test.txt", 4, 1);
 //		knn("classification\\dna_train.txt","classification\\dna_test.txt", 4, 2);
-//		knn("classification\\dna_train.txt","classification\\dna_test.txt", 15, 2);
+		knn("classification\\dna_train.txt","classification\\dna_test.txt", 15, 2);
 	}
 	
 	public static void knn(String traningFile, String testFile, int K, int metricType){
+		//get the current time
 		final long startTime = System.currentTimeMillis();
 		
 		try {
+			//read trainingSet and testingSet
 			TrainRecord[] trainingSet =  FileManager.readTrainFile(traningFile);
 			TestRecord[] testingSet =  FileManager.readTestFile(testFile);
 			
+			//determine the type of metric according to metricType
 			Metric metric;
 			if(metricType == 0)
 				metric = new CosineSimilarity();
@@ -46,23 +49,28 @@ public class knn {
 				System.out.println("The entered metric_type is wrong!");
 				return;
 			}
+			
+			//test those TestRecords one by one
 			int numOfTestingRecord = testingSet.length;
 			for(int i = 0; i < numOfTestingRecord; i ++){
 				TrainRecord[] neighbors = findKNearestNeighbors(trainingSet, testingSet[i], K, metric);
 				int classLabel = classify(neighbors);
-				testingSet[i].predictedLabel = classLabel;
+				testingSet[i].predictedLabel = classLabel; //assign the predicted label to TestRecord
 			}
 			
+			//calculate the accuracy
 			int correctPrediction = 0;
 			for(int j = 0; j < numOfTestingRecord; j ++){
 				if(testingSet[j].predictedLabel == testingSet[j].classLabel)
 					correctPrediction ++;
 			}
 			
+			//Output a file containing predicted labels for TestRecords
 			String predictPath = FileManager.outputFile(testingSet, traningFile);
 			System.out.println("The prediction file is stored in "+predictPath);
 			System.out.println("The accuracy is "+(double)correctPrediction / numOfTestingRecord);
 			
+			//print the total execution time
 			final long endTime = System.currentTimeMillis();
 			System.out.println("Total excution time: "+(endTime - startTime) / (double)1000 +" seconds.");
 		
@@ -113,12 +121,15 @@ public class knn {
 	
 	// Get the class label by using neighbors
 	static int classify(TrainRecord[] neighbors){
-		HashMap<Integer, Double> map = new HashMap();
+		//construct a HashMap to store <classLabel, weight>
+		HashMap<Integer, Double> map = new HashMap<Integer, Double>();
 		int num = neighbors.length;
 		
 		for(int index = 0;index < num; index ++){
 			TrainRecord temp = neighbors[index];
 			int key = temp.classLabel;
+			
+			//if this classLabel does not exist in the HashMap, put 
 			if(!map.containsKey(key))
 				map.put(key, 1 / temp.distance);
 			else{
@@ -131,7 +142,7 @@ public class knn {
 		//Find the most likely label
 		double maxSimilarity = 0;
 		int returnLabel = -1;
-		Set labelSet = map.keySet();
+		Set<Integer> labelSet = map.keySet();
 		Iterator<Integer> it = labelSet.iterator();
 		while(it.hasNext()){
 			int label = it.next();

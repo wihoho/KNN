@@ -1,4 +1,5 @@
-
+//This class implements Metric interface and is used to calculate CosineSimilarity
+//Notice: the CosineSimilarity is transformed into (1 / cosine) in order to be unified with Euclidean distance and L1 distance 
 public class CosineSimilarity implements Metric {
 
 	@Override

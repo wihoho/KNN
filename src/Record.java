@@ -1,4 +1,4 @@
-
+//Basic Record class
 public class Record {
 	double[] attributes;
 	int classLabel;
