@@ -1,4 +1,5 @@
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Set;
@@ -6,10 +7,10 @@ import java.util.Set;
 
 public class knn {
 	public static void main(String[] args){
-//		knn("classification\\glass_train.txt","classification\\glass_test.txt", 1, 0, false);
-//		knn("classification\\glass_train.txt","classification\\glass_test.txt", 6, 1,false);
-//		knn("classification\\glass_train.txt","classification\\glass_test.txt", 10, 2,false);
-//		knn("classification\\glass_train.txt","classification\\glass_test.txt", 20, 2,false);
+//		knn("classification\\glass_train.txt","classification\\glass_test.txt", 1, 0);
+//		knn("classification\\glass_train.txt","classification\\glass_test.txt", 6, 1);
+//		knn("classification\\glass_train.txt","classification\\glass_test.txt", 10, 2);
+//		knn("classification\\glass_train.txt","classification\\glass_test.txt", 20, 2);
 //		System.out.println();
 //		knn("classification\\glass_train.txt","classification\\glass_test.txt", 1, 0, true);
 //		knn("classification\\glass_train.txt","classification\\glass_test.txt", 6, 1,true);
@@ -68,29 +69,37 @@ public class knn {
 		int NumOfTrainingSet = trainingSet.length;
 		assert K <= NumOfTrainingSet : "K is lager than the length of trainingSet!";
 		
-		//initialization
-		TrainRecord[] neighbors = new TrainRecord[K];
+		//Update KNN: take the case when testRecord has multiple neighbors with the same distance into consideration
+		//Solution: Update the size of container holding the neighbors
+		ArrayList<TrainRecord> neighbors = new ArrayList<TrainRecord>();
+		
+		//initialization, put the first K trainRecords into the above arrayList
 		int index;
-		for(index = 0; index < K; index ++){
+		for(index = 0; index < K; index++){
 			trainingSet[index].distance = metric.getDistance(trainingSet[index], testRecord);
-			neighbors[index] = trainingSet[index];
+			neighbors.add(trainingSet[index]);
 		}
 		
 		//go through the remaining records in the trainingSet to find K nearest neighbors
 		for(index = K; index < NumOfTrainingSet; index ++){
 			trainingSet[index].distance = metric.getDistance(trainingSet[index], testRecord);
 			
+			//get the index of the neighbor with the largest distance to testRecord
 			int maxIndex = 0;
-			for(int i = 1; i < K; i ++){
-				if(neighbors[i].distance > neighbors[maxIndex].distance)
+			for(int i = 1; i < neighbors.size(); i ++){
+				if(neighbors.get(i).distance > neighbors.get(maxIndex).distance)
 					maxIndex = i;
 			}
 			
-			if(neighbors[maxIndex].distance > trainingSet[index].distance)
-				neighbors[maxIndex] = trainingSet[index];
+			//add the current trainingSet[index] into neighbors if applicable
+			//append the current trainingSet[index] to neighbors if the distance is equal to the max distance 
+			if(neighbors.get(maxIndex).distance > trainingSet[index].distance)
+				neighbors.set(maxIndex, trainingSet[index]);
+			else if (neighbors.get(maxIndex).distance == trainingSet[index].distance)
+				neighbors.add(trainingSet[index]);
 		}
 		
-		return neighbors;
+		return neighbors.toArray(new TrainRecord[neighbors.size()]);
 	}
 	
 	// Get the class label by using neighbors
