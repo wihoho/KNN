@@ -6,37 +6,32 @@ import java.util.Set;
 
 public class knn {
 	public static void main(String[] args){
-		knn("classification\\glass_train.txt","classification\\glass_test.txt", 1, 0, false);
-		knn("classification\\glass_train.txt","classification\\glass_test.txt", 6, 1,false);
-		knn("classification\\glass_train.txt","classification\\glass_test.txt", 10, 2,false);
-		knn("classification\\glass_train.txt","classification\\glass_test.txt", 20, 2,false);
-		System.out.println();
-		knn("classification\\glass_train.txt","classification\\glass_test.txt", 1, 0, true);
-		knn("classification\\glass_train.txt","classification\\glass_test.txt", 6, 1,true);
-		knn("classification\\glass_train.txt","classification\\glass_test.txt", 10, 2,true);
-		knn("classification\\glass_train.txt","classification\\glass_test.txt", 20, 2,true);
-		System.out.println();
-		knn("classification\\dna_train.txt","classification\\dna_test.txt", 4, 0,false);
-		knn("classification\\dna_train.txt","classification\\dna_test.txt", 4, 1,false);
-		knn("classification\\dna_train.txt","classification\\dna_test.txt", 4, 2,false);
-		knn("classification\\dna_train.txt","classification\\dna_test.txt", 15, 2,false);
-		System.out.println();
-		knn("classification\\dna_train.txt","classification\\dna_test.txt", 4, 0,true);
-		knn("classification\\dna_train.txt","classification\\dna_test.txt", 4, 1,true);
-		knn("classification\\dna_train.txt","classification\\dna_test.txt", 4, 2,true);
-		knn("classification\\dna_train.txt","classification\\dna_test.txt", 15, 2,true);
+//		knn("classification\\glass_train.txt","classification\\glass_test.txt", 1, 0, false);
+//		knn("classification\\glass_train.txt","classification\\glass_test.txt", 6, 1,false);
+//		knn("classification\\glass_train.txt","classification\\glass_test.txt", 10, 2,false);
+//		knn("classification\\glass_train.txt","classification\\glass_test.txt", 20, 2,false);
+//		System.out.println();
+//		knn("classification\\glass_train.txt","classification\\glass_test.txt", 1, 0, true);
+//		knn("classification\\glass_train.txt","classification\\glass_test.txt", 6, 1,true);
+//		knn("classification\\glass_train.txt","classification\\glass_test.txt", 10, 2,true);
+//		knn("classification\\glass_train.txt","classification\\glass_test.txt", 20, 2,true);
+//		System.out.println();
+//		knn("classification\\dna_train.txt","classification\\dna_test.txt", 4, 0,false);
+//		knn("classification\\dna_train.txt","classification\\dna_test.txt", 4, 1,false);
+//		knn("classification\\dna_train.txt","classification\\dna_test.txt", 4, 2,false);
+//		knn("classification\\dna_train.txt","classification\\dna_test.txt", 15, 2,false);
+//		System.out.println();
+//		knn("classification\\dna_train.txt","classification\\dna_test.txt", 4, 0);
+//		knn("classification\\dna_train.txt","classification\\dna_test.txt", 4, 1);
+//		knn("classification\\dna_train.txt","classification\\dna_test.txt", 4, 2);
+		knn("classification\\dna_train.txt","classification\\dna_test.txt", 15, 2);
 	}
 	
-	public static void knn(String traningFile, String testFile, int K, int metricType, boolean normalization){
+	public static void knn(String traningFile, String testFile, int K, int metricType){
 		try {
 			TrainRecord[] trainingSet =  FileManager.readTrainFile(traningFile);
 			TestRecord[] testingSet =  FileManager.readTestFile(testFile);
 			
-			//normalize the data
-			if(normalization){
-				double[][] scheme = FileManager.normalizeRecords(trainingSet);
-				FileManager.normalize(testingSet,scheme);
-			}
 			Metric metric;
 			if(metricType == 0)
 				metric = new CosineSimilarity();
