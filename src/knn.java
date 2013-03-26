@@ -1,15 +1,18 @@
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Set;
 
 
 public class knn {
-	public static void main(String[] args){
+	
+	public static void main(String[] args){	
 		System.out.println("iris");
-		knn("classification\\iris_train.txt","classification\\iris_test.txt",1,1);
+		knn("classification\\iris_train.txt","classification\\iris_test.txt",1,2);
 		System.out.println();
+
 		
 		System.out.println("glass");
 		knn("classification\\glass_train.txt","classification\\glass_test.txt",1,0);
@@ -32,13 +35,35 @@ public class knn {
 		System.out.println();
 	}
 	
-	public static void knn(String traningFile, String testFile, int K, int metricType){
+	public static void knn(String trainingFile, String testFile, int K, int metricType){
 		//get the current time
 		final long startTime = System.currentTimeMillis();
 		
+		// make sure the input arguments are legal
+		if(K <= 0){
+			System.out.println("K should be larger than 0!");
+			return;
+		}
+		
+		// metricType should be within [0,2];
+		if(metricType > 2 || metricType <0){
+			System.out.println("metricType is not within the range [0,2]. Please try again later");
+			return;
+		}
+		
+		//TrainingFile and testFile should be the same group
+		String trainGroup = extractGroupName(trainingFile);
+		String testGroup = extractGroupName(testFile);
+		
+		if(!trainGroup.equals(testGroup)){
+			System.out.println("trainingFile and testFile are illegal!");
+			return;
+		}
+		
+		
 		try {
 			//read trainingSet and testingSet
-			TrainRecord[] trainingSet =  FileManager.readTrainFile(traningFile);
+			TrainRecord[] trainingSet =  FileManager.readTrainFile(trainingFile);
 			TestRecord[] testingSet =  FileManager.readTestFile(testFile);
 			
 			//determine the type of metric according to metricType
@@ -70,7 +95,7 @@ public class knn {
 			}
 			
 			//Output a file containing predicted labels for TestRecords
-			String predictPath = FileManager.outputFile(testingSet, traningFile);
+			String predictPath = FileManager.outputFile(testingSet, trainingFile);
 			System.out.println("The prediction file is stored in "+predictPath);
 			System.out.println("The accuracy is "+((double)correctPrediction / numOfTestingRecord)*100+"%");
 			
@@ -92,13 +117,13 @@ public class knn {
 		
 		//Update KNN: take the case when testRecord has multiple neighbors with the same distance into consideration
 		//Solution: Update the size of container holding the neighbors
-		ArrayList<TrainRecord> neighbors = new ArrayList<TrainRecord>();
+		TrainRecord[] neighbors = new TrainRecord[K];
 		
 		//initialization, put the first K trainRecords into the above arrayList
 		int index;
 		for(index = 0; index < K; index++){
 			trainingSet[index].distance = metric.getDistance(trainingSet[index], testRecord);
-			neighbors.add(trainingSet[index]);
+			neighbors[index] = trainingSet[index];
 		}
 		
 		//go through the remaining records in the trainingSet to find K nearest neighbors
@@ -107,20 +132,17 @@ public class knn {
 			
 			//get the index of the neighbor with the largest distance to testRecord
 			int maxIndex = 0;
-			for(int i = 1; i < neighbors.size(); i ++){
-				if(neighbors.get(i).distance > neighbors.get(maxIndex).distance)
+			for(int i = 1; i < K; i ++){
+				if(neighbors[i].distance > neighbors[maxIndex].distance)
 					maxIndex = i;
 			}
 			
 			//add the current trainingSet[index] into neighbors if applicable
-			//append the current trainingSet[index] to neighbors if the distance is equal to the max distance 
-			if(neighbors.get(maxIndex).distance > trainingSet[index].distance)
-				neighbors.set(maxIndex, trainingSet[index]);
-			else if (neighbors.get(maxIndex).distance == trainingSet[index].distance)
-				neighbors.add(trainingSet[index]);
+			if(neighbors[maxIndex].distance > trainingSet[index].distance)
+				neighbors[maxIndex] = trainingSet[index];
 		}
 		
-		return neighbors.toArray(new TrainRecord[neighbors.size()]);
+		return neighbors;
 	}
 	
 	// Get the class label by using neighbors
@@ -132,10 +154,12 @@ public class knn {
 		for(int index = 0;index < num; index ++){
 			TrainRecord temp = neighbors[index];
 			int key = temp.classLabel;
-			
-			//if this classLabel does not exist in the HashMap, put 
+		
+			//if this classLabel does not exist in the HashMap, put <key, 1/(temp.distance)> into the HashMap
 			if(!map.containsKey(key))
 				map.put(key, 1 / temp.distance);
+			
+			//else, update the HashMap by adding the weight associating with that key
 			else{
 				double value = map.get(key);
 				value += 1 / temp.distance;
@@ -148,6 +172,9 @@ public class knn {
 		int returnLabel = -1;
 		Set<Integer> labelSet = map.keySet();
 		Iterator<Integer> it = labelSet.iterator();
+		
+		//go through the HashMap by using keys 
+		//and find the key with the highest weights 
 		while(it.hasNext()){
 			int label = it.next();
 			double value = map.get(label);
@@ -158,5 +185,17 @@ public class knn {
 		}
 		
 		return returnLabel;
+	}
+	
+	static String extractGroupName(String filePath){
+		StringBuilder groupName = new StringBuilder();
+		for(int i = 15; i < filePath.length(); i ++){
+			if(filePath.charAt(i) != '_')
+				groupName.append(filePath.charAt(i));
+			else
+				break;
+		}
+		
+		return groupName.toString();
 	}
 }
