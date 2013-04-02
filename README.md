@@ -1,5 +1,7 @@
 KNN
 ===
+To know more about this project, please refer to `https://www.dropbox.com/s/5viyu1ok5nr8mtt/KNN.pdf`
+
 This is a course assignment, and we are supposed to implement the basic K-Nearest Neighbor algorithm. Below are the basic classes deisgned in the initial phase:	
 
 - **FileManager**  
@@ -31,9 +33,4 @@ Questions:
 	
 2. During KNN, is there a need to set a threshold to test outliers?  
 	Should be No since there are so many different datasets. We may nesure that all test cases have valid class labels.         
-
-Problems:  
-    	
-- Cosine Similarity may be negative  ?
-- weighs should use Euclidean distance?  
           
