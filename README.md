@@ -1,6 +1,6 @@
 KNN
 ===
-To know more about this project, please refer to [https://dl.dropboxusercontent.com/u/37572555/Github/KNN/KNN.pdf](https://www.dropbox.com/s/5viyu1ok5nr8mtt/KNN.pdf)  
+To know more about this project, please refer to [https://dl.dropboxusercontent.com/u/37572555/Github/KNN/KNN.pdf](https://dl.dropboxusercontent.com/u/37572555/Github/KNN/KNN.pdf)  
 
 This is a course assignment, and we are supposed to implement the basic K-Nearest Neighbor algorithm. Below are the basic classes deisgned in the initial phase:	
 
