@@ -13,7 +13,7 @@ public class FileManager {
 	//read training files
 	public static TrainRecord[] readTrainFile(String fileName) throws IOException{
 		File file = new File(fileName);
-		Scanner scanner = new Scanner(file);
+		Scanner scanner = new Scanner(file).useLocale(Locale.US);
 
 		//read file
 		int NumOfSamples = scanner.nextInt();
@@ -50,7 +50,7 @@ public class FileManager {
 	
 	public static TestRecord[] readTestFile(String fileName) throws IOException{
 		File file = new File(fileName);
-		Scanner scanner = new Scanner(file);
+		Scanner scanner = new Scanner(file).useLocale(Locale.US);
 
 		//read file
 		int NumOfSamples = scanner.nextInt();
